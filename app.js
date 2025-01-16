@@ -9,6 +9,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const secretKey = 'your_secret_key';
+const secretKey = process.env.SECRET_KEY;
 
 // Middleware
 app.use(cors());
