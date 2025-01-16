@@ -7,20 +7,33 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 
 const app = express();
-const port = 3000;
-const secretKey = 'your_secret_key';
-const secretKey = process.env.SECRET_KEY;
+const port = process.env.PORT || 3000;
+const secretKey = process.env.SECRET_KEY || 'your_secret_key';
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // MySQL bağlantısı
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'arac_yukleme'
+});
+
+db.connect(err => {
+    if (err) {
+        console.error('MySQL bağlantı hatası:', err);
+        return;
+    }
+    console.log('MySQL veritabanına başarıyla bağlanıldı.');
+});
+
+// Rotalar
+app.get('/', (req, res) => {
+    res.send('Uygulama çalışıyor!');
 });
 
 db.connect(err => {
