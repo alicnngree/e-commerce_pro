@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kullanıcı Yönetimi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        form h2 {
+            margin-top: 0;
+            color: #4CAF50;
+        }
+
+        input, select, button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        @media (max-width: 600px) {
+            table, form {
+                width: 100%;
+            }
+
+            input, select, button {
+                width: calc(100% - 10px);
+            }
+        }
+
+        .navbar-brand {
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+        
+            .nav-link {
+                font-size: 1rem;
+                margin-right: 10px;
+            }
+        
+            .nav-link:hover {
+                text-decoration: underline;
+            }
+        
+            .navbar {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .header {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-decoration: none;
+        color: white;
+    }
+
+    .header nav {
+        display: flex;
+        gap: 20px;
+    }
+
+    .header nav a {
+        text-decoration: none;
+        color: white;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+    }
+
+    .header nav a:hover {
+        color: #d1ecf1;
+    }
+
+    .header .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .header .search-bar input {
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .header .search-bar button {
+        padding: 6px 12px;
+        background-color: #0056b3;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .header .search-bar button:hover {
+        background-color: #003f88;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin: 20px 0;
+    }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">Barkod Yönetimi</a>
+        <nav>
+            <a href="http://localhost:3000/index.html?">Ana Sayfa</a>
+            <a href="http://localhost:3000/user.html">Kullanıcılar</a>
+            <a href="http://localhost:3000/login.html">Kullanıcı Değiştir</a>
+        </nav>
+    </header>
+    <h1>Kullanıcı Yönetimi</h1>
+
+    <!-- Kullanıcı Ekleme Formu -->
+    <form id="addUserForm">
+        <h2>Yeni Kullanıcı Ekle</h2>
+        <input type="text" id="newUsername" placeholder="Kullanıcı Adı" required>
+        <input type="password" id="newPassword" placeholder="Şifre" required>
+        <select id="newRole">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+        </select>
+        <button type="submit">Kullanıcı Ekle</button>
+    </form>
+
+    <!-- Kullanıcı Listesi -->
+    <h2>Mevcut Kullanıcılar</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kullanıcı Adı</th>
+                <th>Rol</th>
+                <th>Güncelle</th>
+            </tr>
+        </thead>
+        <tbody id="userTable">
+            <!-- Dinamik Kullanıcı Verisi Buraya Eklenecek -->
+        </tbody>
+    </table>
+
+    <script>
+        const apiUrl = 'http://localhost:3000/api/users';
+
+        // Kullanıcıları Listeleme
+        async function fetchUsers() {
+            try {
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const users = await response.json();
+
+                if (response.ok) {
+                    const userTable = document.getElementById('userTable');
+                    userTable.innerHTML = '';
+
+                    users.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${user.id}</td>
+                            <td>${user.username}</td>
+                            <td>
+                                <select data-id="${user.id}" onchange="updateUserRole(${user.id}, this.value)">
+                                    <option value="user" ${user.role === 'user' ? 'selected' : ''}>User</option>
+                                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                                </select>
+                            </td>
+                            <td><button onclick="deleteUser(${user.id})">Sil</button></td>
+                        `;
+                        userTable.appendChild(row);
+                    });
+                } else {
+                    alert('Kullanıcıları alırken bir hata oluştu.');
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('API ile bağlantı kurulamadı.');
+            }
+        }
+
+        // Kullanıcı Ekleme
+        document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('newUsername').value.trim();
+            const password = document.getElementById('newPassword').value.trim();
+            const role = document.getElementById('newRole').value;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ username, password, role })
+                });
+
+                if (response.ok) {
+                    alert('Kullanıcı başarıyla eklendi.');
+                    fetchUsers(); // Listeyi yenile
+                    e.target.reset();
+                } else {
+                    const result = await response.json();
+                    alert(result.error || 'Kullanıcı eklenemedi.');
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('API ile bağlantı kurulamadı.');
+            }
+        });
+
+        // Kullanıcı Rolünü Güncelleme
+        async function updateUserRole(userId, role) {
+            try {
+                const response = await fetch(`${apiUrl}/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ role })
+                });
+
+                if (response.ok) {
+                    alert('Rol başarıyla güncellendi.');
+                } else {
+                    const result = await response.json();
+                    alert(result.error || 'Rol güncellenemedi.');
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('API ile bağlantı kurulamadı.');
+            }
+        }
+
+        // Kullanıcı Silme
+        async function deleteUser(userId) {
+            try {
+                const response = await fetch(`${apiUrl}/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    alert('Kullanıcı başarıyla silindi.');
+                    fetchUsers(); // Listeyi yenile
+                } else {
+                    const result = await response.json();
+                    alert(result.error || 'Kullanıcı silinemedi.');
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('API ile bağlantı kurulamadı.');
+            }
+        }
+
+        // Sayfa Yüklendiğinde Kullanıcıları Listele
+        window.onload = fetchUsers;
+    </script>
+</body>
+</html>

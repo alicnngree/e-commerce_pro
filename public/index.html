@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barkod Yönetimi</title>
+    <link 
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRfQN62I2b3+52/tPBY0mUhw5h43O8fIMjc5o8Jz" 
+        crossorigin="anonymous">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f9f9f9;
+                margin: 0;
+                padding: 0;
+            }
+        
+            h1 {
+                text-align: center;
+                color: #333;
+                margin: 20px 0;
+            }
+        
+            form {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+        
+            form input, form select, form button {
+                padding: 10px;
+                font-size: 14px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+        
+            form button {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+        
+            form button:hover {
+                background-color: #0056b3;
+            }
+        
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+        
+            table th, table td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+        
+            table th {
+                background-color: #007bff;
+                color: white;
+            }
+        
+            table tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+        
+            table tr:hover {
+                background-color: #f1f1f1;
+            }
+        
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin: 20px 0;
+                gap: 5px;
+            }
+        
+            .pagination button {
+                padding: 8px 12px;
+                border: 1px solid #ccc;
+                background-color: #007bff;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        
+            .pagination button:hover {
+                background-color: #0056b3;
+            }
+        
+            .pagination button.active {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+        
+            .navbar-brand {
+                font-size: 1.5rem;
+                font-weight: bold;
+            }
+        
+            .nav-link {
+                font-size: 1rem;
+                margin-right: 10px;
+            }
+        
+            .nav-link:hover {
+                text-decoration: underline;
+            }
+        
+            .navbar {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .header {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-decoration: none;
+        color: white;
+    }
+
+    .header nav {
+        display: flex;
+        gap: 20px;
+    }
+
+    .header nav a {
+        text-decoration: none;
+        color: white;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+    }
+
+    .header nav a:hover {
+        color: #d1ecf1;
+    }
+
+    .header .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .header .search-bar input {
+        padding: 5px 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1rem;
+    }
+
+    .header .search-bar button {
+        padding: 6px 12px;
+        background-color: #0056b3;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .header .search-bar button:hover {
+        background-color: #003f88;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin: 20px 0;
+    }
+        </style>
+        </head>
+        <body>
+            <header class="header">
+                <a href="#" class="logo">Barkod Yönetimi</a>
+                <nav>
+                    <a href="http://localhost:3000/index.html?">Ana Sayfa</a>
+                    <a href="http://localhost:3000/user.html">Kullanıcılar</a>
+                    <a href="http://localhost:3000/login.html">Kullanıcı Değiştir</a>
+                </nav>
+                <div class="search-bar">
+                    <input type="text" placeholder="Barkod Ara">
+                    <button>Ara</button>
+                </div>
+            </header>
+            
+            <h1>Barkod Yönetimi</h1>        
+
+    <!-- Barkod Ekleme Formu -->
+    <form id="addBarcodeForm">
+        <input type="text" id="barcodeInput" placeholder="Barkod Girin" required>
+        <select id="carrierSelect">
+            <option value="" disabled selected>Kargo Şirketi Seçin</option>
+        </select>
+        <button type="submit">Barkod Ekle</button>
+    </form>
+
+    <form id="filterForm">
+        <select id="filterCarrier">
+            <option value="">Kargo Şirketi Seçin</option>
+            <option value="Trendyol">Trendyol</option>
+            <option value="HepsiJet">HepsiJet</option>
+            <option value="Kolay Gelsin">Kolay Gelsin</option>
+            <option value="MNG Kargo">MNG Kargo</option>
+            <option value="Sürat Kargo">Sürat Kargo</option>
+            <option value="PTT Kargo">PTT Kargo</option>
+            <option value="UPS Kargo">UPS Kargo</option>
+            <option value="Aras Kargo">Aras Kargo</option>
+        </select>
+        <input type="date" id="startDate" placeholder="Başlangıç Tarihi">
+        <input type="date" id="endDate" placeholder="Bitiş Tarihi">
+        <button type="submit">Ara</button>
+    </form>    
+    
+   <!-- Barkod Listesi -->
+   <table id="barcodeTable">
+    <thead>
+        <tr>
+            <th>Barkod</th>
+            <th>Durum</th>
+            <th>Kargo Şirketi</th>
+            <th>Tarih</th>
+            <th>Kullanıcı</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Tüm veriler buraya eklenecek -->
+    </tbody>
+</table>
+
+<!-- Sayfalama Düğmeleri -->
+<div class="pagination" id="pagination"></div>
+
+    <script>
+        const apiUrl = 'http://localhost:3000/api/barcodes';
+        const rowsPerPage = 10; // Her sayfada gösterilecek barkod sayısı
+let currentPage = 1; // Başlangıç sayfası
+let totalRows = 0; // Toplam veri sayısı
+
+// Barkodları Listeleme
+async function fetchBarcodes(page = 1) {
+    try {
+        const response = await fetch(`${apiUrl}?page=${page}&limit=${rowsPerPage}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            alert(error.error || 'Barkodlar alınamadı.');
+            return;
+        }
+
+        const data = await response.json();
+        const barcodes = data.barcodes;
+        totalRows = data.totalRows;
+
+        const tableBody = document.getElementById('barcodeTable').querySelector('tbody');
+        tableBody.innerHTML = '';
+
+        barcodes.forEach(({ barcode, status, carrier, scanned_at, user_id }) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${barcode}</td>
+                <td>${status || 'Bilinmiyor'}</td>
+                <td>${carrier || 'Bilinmiyor'}</td>
+                <td>${new Date(scanned_at).toLocaleString()}</td>
+                <td>${user_id}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        setupPagination(); // Sayfaları oluştur
+    } catch (error) {
+        console.error('Hata:', error);
+        alert('API ile bağlantı kurulamadı.');
+    }
+}
+
+// Sayfalamayı Ayarla
+function setupPagination() {
+    const pagination = document.getElementById('pagination');
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+    pagination.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.classList.add('page-button');
+        if (i === currentPage) button.classList.add('active');
+
+        button.addEventListener('click', () => {
+            currentPage = i;
+            fetchBarcodes(currentPage);
+        });
+
+        pagination.appendChild(button);
+    }
+}
+
+        // Kargo şirketlerini doldur
+        function populateCarrierOptions() {
+            const carriers = ["Trendyol", "HepsiJet", "Kolay Gelsin", "MNG Kargo", "Sürat Kargo", "PTT Kargo", "UPS Kargo", "Aras Kargo", "Diğer"];
+            const selectBox = document.getElementById('carrierSelect');
+            carriers.forEach(carrier => {
+                const option = document.createElement('option');
+                option.value = carrier;
+                option.textContent = carrier;
+                selectBox.appendChild(option);
+            });
+        }
+
+        // Barkod başlangıcına göre varsayılan kargo şirketini seç
+        function setDefaultCarrier(barcode) {
+            const selectBox = document.getElementById('carrierSelect');
+            if (barcode.startsWith("733")) {
+                selectBox.value = "Trendyol";
+            } else if (barcode.startsWith("727")) {
+                selectBox.value = "Sürat Kargo";
+            } else if (barcode.startsWith("627")) {
+                selectBox.value = "HepsiJet";
+            } else if (barcode.startsWith("ZA")) {
+                selectBox.value = "Kolay Gelsin";
+            } else if (barcode.startsWith("AZ")) {
+                selectBox.value = "MNG Kargo";
+            } else if (barcode.startsWith("400")) {
+                selectBox.value = "PTT Kargo";
+            } else if (barcode.startsWith("1Z")) {
+                selectBox.value = "UPS Kargo";
+            } else if (barcode.startsWith("1") || barcode.startsWith("100") || barcode.startsWith("34")) {
+                selectBox.value = "Aras Kargo";
+            } else {
+                selectBox.value = "Diğer";
+            }
+        }
+
+        // Barkod ekleme işlemi
+        document.getElementById('addBarcodeForm').addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+    const barcode = document.getElementById('barcodeInput').value.trim();
+    const carrier = document.getElementById('carrierSelect').value;
+    const token = localStorage.getItem('token');
+    const userInfo = parseJwt(token); // Token'dan kullanıcı bilgilerini alın
+    const username = userInfo?.username || 'Bilinmiyor';
+
+    if (!barcode || !carrier) {
+        alert('Lütfen tüm alanları doldurun.');
+        return;
+    }
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ barcode, carrier }),
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            addRowToTable({
+                barcode,
+                carrier,
+                scanned_at: new Date(),
+                user_id: username, // Kullanıcı adı token'dan alınır
+            });
+            document.getElementById('barcodeInput').value = ''; // Giriş alanını temizle
+        } else {
+            console.error('Barkod eklenirken bir hata oluştu.');
+        }
+    } catch (error) {
+        console.error('API ile bağlantı kurulamadı.', error);
+    }
+});
+
+
+        function addRowToTable({ barcode, carrier, scanned_at, user_id }) {
+    const tableBody = document.getElementById('barcodeTable').querySelector('tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${barcode}</td>
+        <td>Araca Yüklendi</td>
+        <td>${carrier || 'Bilinmiyor'}</td>
+        <td>${new Date(scanned_at).toLocaleString()}</td>
+        <td>${user_id}</td>
+    `;
+    tableBody.prepend(row); // Yeni eklenen barkodu en üstte göstermek için prepend kullanıyoruz
+}
+
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`)
+                .join('')
+        );
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        console.error('Token çözümleme hatası:', e);
+        return null;
+    }
+}
+
+        // Barkodları listeleme
+// Barkodları listeleme
+async function fetchBarcodes() {
+    try {
+        const response = await fetch(apiUrl, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            alert(error.error || 'Barkodlar alınamadı.');
+            return;
+        }
+
+        const barcodes = await response.json();
+        const tableBody = document.getElementById('barcodeTable').querySelector('tbody');
+        tableBody.innerHTML = '';
+
+        // Verileri ters sırada göstermek için reverse()
+        barcodes.reverse().forEach(({ barcode, status, carrier, scanned_at, user_id }) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${barcode}</td>
+                <td>${status || 'Bilinmiyor'}</td>
+                <td>${carrier || 'Bilinmiyor'}</td>
+                <td>${new Date(scanned_at).toLocaleString()}</td>
+                <td>${user_id}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Hata:', error);
+        alert('API ile bağlantı kurulamadı.');
+    }
+}
+
+// Tabloya yeni eklenen barkodu en üstte ekle
+function addRowToTable({ barcode, carrier, scanned_at, user_id }) {
+    const tableBody = document.getElementById('barcodeTable').querySelector('tbody');
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${barcode}</td>
+        <td>Araca Yüklendi</td>
+        <td>${carrier || 'Bilinmiyor'}</td>
+        <td>${new Date(scanned_at).toLocaleString()}</td>
+        <td>${user_id}</td>
+    `;
+    tableBody.prepend(row); // En üstte ekler
+}
+
+document.getElementById('filterForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const carrier = document.getElementById('filterCarrier').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    // URL'yi oluştur
+    let url = `${apiUrl}?`;
+    if (carrier) url += `carrier=${carrier}&`;
+    if (startDate) url += `startDate=${startDate}&`;
+    if (endDate) url += `endDate=${endDate}&`;
+
+    console.log('Filtreleme URL:', url); // Eklenen log
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            alert(error.error || 'Filtreleme sırasında bir hata oluştu.');
+            return;
+        }
+
+        const barcodes = await response.json();
+        const tableBody = document.getElementById('barcodeTable').querySelector('tbody');
+        tableBody.innerHTML = '';
+
+        barcodes.forEach(({ barcode, status, carrier, scanned_at, user_id }) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${barcode}</td>
+                <td>${status || 'Bilinmiyor'}</td>
+                <td>${carrier || 'Bilinmiyor'}</td>
+                <td>${new Date(scanned_at).toLocaleString()}</td>
+                <td>${user_id}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Hata:', error);
+        alert('API ile bağlantı kurulamadı.');
+    }
+});
+
+
+        // Barkod girişine göre kargo şirketini otomatik seçme
+        document.getElementById('barcodeInput').addEventListener('input', (e) => {
+            const barcode = e.target.value.trim();
+            if (barcode) {
+                setDefaultCarrier(barcode);
+            }
+        });
+
+        async function submitBarcode() {
+    const barcode = document.getElementById('barcodeInput').value.trim();
+    const carrier = document.getElementById('carrierSelect').value; // Select kutusundan kargo şirketi alınıyor
+    if (!barcode || !carrier) {
+        alert('Lütfen bir barkod ve kargo şirketi seçin.');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/barcodes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify({ barcode, carrier }), // Barkod ve kargo şirketi gönderiliyor
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert('Barkod başarıyla eklendi.');
+            fetchBarcodes(); // Tabloyu güncelle
+        } else {
+            alert(result.error || 'Barkod eklenirken bir hata oluştu.');
+        }
+    } catch (error) {
+        console.error('Hata:', error);
+        alert('API ile bağlantı kurulamadı.');
+    }
+}
+
+        // Sayfa yüklendiğinde işlemleri başlat
+        window.onload = () => {
+            populateCarrierOptions();
+            fetchBarcodes();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #loginForm {
+            background: #ffffff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #loginForm h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #loginForm input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #loginForm button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #loginForm button:hover {
+            background-color: #0056b3;
+        }
+
+        #loginForm p {
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        #loginForm p a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        #loginForm p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginForm">
+        <h1>Sisteme Giriş Yap</h1>
+        <input type="text" id="username" placeholder="Kullanıcı Adı">
+        <input type="password" id="password" placeholder="Şifre">
+        <button onclick="login()">Giriş Yap</button>
+        <p>Hesabınız yok mu? <a href="#">Kayıt Ol</a></p>
+    </div>
+
+    <script>
+        async function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!username || !password) {
+                alert('Lütfen kullanıcı adı ve şifre girin.');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', result.token);
+                    alert('Giriş başarılı!');
+                    window.location.href = 'index.html';
+                } else {
+                    alert(result.error || 'Giriş başarısız.');
+                }
+            } catch (error) {
+                console.error('Hata:', error);
+                alert('API ile bağlantı kurulamadı.');
+            }
+        }
+    </script>
+</body>
+</html>
