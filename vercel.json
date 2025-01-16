@@ -5,10 +5,7 @@
   ],
   "routes": [
     { "src": "/(.*)", "dest": "app.js" }
-  ]
-}
-
-{
+  ],
   "env": {
     "DB_HOST": "localhost",
     "DB_USER": "root",
