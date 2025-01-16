@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // MySQL bağlantısı
 const db = mysql.createConnection({
-    host: process.env.DB_HOST || '94.73.144.130',
+    host: process.env.DB_HOST || 'mysql.natrohost.com',
     user: process.env.DB_USER || 'u2112212_user503',
     password: process.env.DB_PASSWORD || 'ev9OZ--z21m:KX5=',
     database: process.env.DB_NAME || 'u2112212_arac_yukleme'
