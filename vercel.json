@@ -7,3 +7,13 @@
     { "src": "/(.*)", "dest": "app.js" }
   ]
 }
+
+{
+  "env": {
+    "DB_HOST": "localhost",
+    "DB_USER": "root",
+    "DB_PASSWORD": "root",
+    "DB_NAME": "arac_yukleme",
+    "SECRET_KEY": "your_secret_key"
+  }
+}
